@@ -76,9 +76,25 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
   // lv2
   @Override
-  public Long updateSchedule(Long id, String todo, Timestamp updatedDateTime) {
-    int result = jdbcTemplate.update("update schedule set todo = ?, updatedDateTime = ? where id = ?",
-            todo, updatedDateTime, id);
+  public Long updateSchedule(Long id, String passwd, String todo, Timestamp updatedDateTime) {
+    StringBuilder stringBuilder = new StringBuilder("update schedule set ");
+    List<Object> params = new ArrayList<>();
+
+    if (passwd != null) {
+      stringBuilder.append("passwd = ?");
+      params.add(passwd);
+    }
+
+    if (todo != null) {
+      stringBuilder.append("todo = ?, ");
+      params.add(todo);
+    }
+
+    stringBuilder.append("updatedDateTime = ? where id = ?");
+    params.add(updatedDateTime);
+    params.add(id);
+
+    int result = jdbcTemplate.update(stringBuilder.toString(), params);
 
     if (result == 0) {
       throw new RuntimeException("일정 수정에서 오류가 발생하였습니다.");

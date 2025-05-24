@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.List;
 
 @Service
@@ -74,7 +75,10 @@ public class ScheduleServiceImpl implements ScheduleService {
     checkPassword(id, scheduleUpdateReqDTO.getPasswd());
 
     return scheduleRepository.findScheduleById(
-        scheduleRepository.updateSchedule(id, scheduleUpdateReqDTO.getTodo(), new Timestamp(System.currentTimeMillis()))
+        scheduleRepository.updateSchedule(id,
+            scheduleUpdateReqDTO.getPasswd(),
+            scheduleUpdateReqDTO.getTodo(),
+            new Timestamp(System.currentTimeMillis()))
         ) // update시 수정날짜는 수정 시점으로 지정
         .map(ScheduleResDTO::new)
         .orElseThrow(() -> new RuntimeException("수정된 일정을 찾을 수 없습니다."));
@@ -82,16 +86,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
   @Override
   @Transactional
-  public void deleteSchedule(Long id, ScheduleDeleteReqDTO scheduleDeleteReqDTO) {
-    checkPassword(id, scheduleDeleteReqDTO.getPasswd());
+  public void deleteSchedule(Long id) {
     scheduleRepository.deleteSchedule(id);
   }
 
-  private void checkPassword(Long id, String password) { // update와 delete에서 사용할 비밀번호 확인 로직
+  @Override
+  public void checkPassword(Long id, String password) { // update와 delete에서 사용할 비밀번호 확인 로직
     scheduleRepository.findScheduleById(id)
         .map(schedule -> {
           if (!schedule.getPasswd().equals(password)) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            throw new InputMismatchException("비밀번호가 일치하지 않습니다.");
           }
           return schedule;
         }).orElseThrow(() -> new RuntimeException("일정을 찾는 중 오류가 발생하였습니다."));
