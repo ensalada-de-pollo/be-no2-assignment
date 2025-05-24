@@ -1,0 +1,19 @@
+Use assignment2;
+
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    passwd VARCHAR(255) NOT NULL,
+    email varchar(50) NULL,
+    registerDateTime timestamp NULL,
+    updatedDateTime timestamp NULL
+);
+
+CREATE TABLE schedule (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    todo VARCHAR(300) NOT NULL,
+    createdDateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updatedDateTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    userId INT NOT NULL,
+    CONSTRAINT FK_schedule FOREIGN KEY (userId) REFERENCES user(id)
+);
