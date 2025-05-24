@@ -4,7 +4,7 @@
 
 ## ERD
 
-![Image](https://github.com/user-attachments/assets/d62180c2-c064-4c12-9288-8735bacc75ac)
+![Image](https://github.com/user-attachments/assets/a5ab1d3a-0409-4fb9-9cea-92562d6e4b23)
 
 ## API 명세서
 
@@ -15,7 +15,7 @@
 
 ## ERD
 
-![Image](https://github.com/user-attachments/assets/b9ccbbea-1155-48d5-8d57-67db59e03796)
+![Image](https://github.com/user-attachments/assets/c6e1c357-af7e-4f44-bcc2-6e27a52b2d61)
 
 ## API 명세서
 
