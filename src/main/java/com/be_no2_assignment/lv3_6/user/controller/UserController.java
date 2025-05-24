@@ -33,7 +33,7 @@ public class UserController {
     return ResponseEntity.ok(userService.registerUser(userRegisterReqDTO));
   }
 
-  @PutMapping("/{id}")
+  @PatchMapping("/{id}")
   public ResponseEntity<UserResDTO> updateUser(
       @PathVariable Long id,
       HttpServletRequest request,
@@ -43,9 +43,8 @@ public class UserController {
 
     String passwd = request.getHeader("passwd");
     if (passwd == null) throw new BadInputException("비밀번호를 입력해주세요.");
-    userService.checkPassword(id, passwd);
 
-    return ResponseEntity.ok(userService.updateUser(id, userUpdateReqDTO));
+    return ResponseEntity.ok(userService.updateUser(id, passwd, userUpdateReqDTO));
   }
 
   @DeleteMapping("/{id}")
@@ -54,9 +53,8 @@ public class UserController {
 
     String passwd = request.getHeader("passwd");
     if (passwd == null) throw new BadInputException("비밀번호를 입력해주세요.");
-    userService.checkPassword(id, passwd);
 
-    userService.deleteUser(id);
+    userService.deleteUser(id, passwd);
 
     return ResponseEntity.ok("사용자 삭제에 성공하였습니다.");
   }

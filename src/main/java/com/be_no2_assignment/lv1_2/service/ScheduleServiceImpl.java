@@ -2,7 +2,6 @@ package com.be_no2_assignment.lv1_2.service;
 
 import com.be_no2_assignment.lv1_2.domain.Schedule;
 import com.be_no2_assignment.lv1_2.dto.request.ScheduleCreateReqDTO;
-import com.be_no2_assignment.lv1_2.dto.request.ScheduleDeleteReqDTO;
 import com.be_no2_assignment.lv1_2.dto.request.ScheduleFindReqDTO;
 import com.be_no2_assignment.lv1_2.dto.request.ScheduleUpdateReqDTO;
 import com.be_no2_assignment.lv1_2.dto.response.ScheduleResDTO;
@@ -29,6 +28,8 @@ public class ScheduleServiceImpl implements ScheduleService {
   @Transactional
   public ScheduleResDTO createSchedule(ScheduleCreateReqDTO scheduleCreateReqDTO) {
     Schedule schedule;
+
+    if (scheduleCreateReqDTO.getPasswd() == null) throw new InputMismatchException("비밀번호를 입력해주세요.");
 
     if (scheduleCreateReqDTO.getCreatedDateTime() == null) { // 작성일을 따로 설정하지 않은 경우
       schedule = new Schedule(scheduleCreateReqDTO.getUsername(), scheduleCreateReqDTO.getPasswd(), scheduleCreateReqDTO.getTodo());
@@ -72,11 +73,8 @@ public class ScheduleServiceImpl implements ScheduleService {
   @Override
   @Transactional
   public ScheduleResDTO updateSchedule(Long id, ScheduleUpdateReqDTO scheduleUpdateReqDTO) {
-    checkPassword(id, scheduleUpdateReqDTO.getPasswd());
-
     return scheduleRepository.findScheduleById(
         scheduleRepository.updateSchedule(id,
-            scheduleUpdateReqDTO.getPasswd(),
             scheduleUpdateReqDTO.getTodo(),
             new Timestamp(System.currentTimeMillis()))
         ) // update시 수정날짜는 수정 시점으로 지정

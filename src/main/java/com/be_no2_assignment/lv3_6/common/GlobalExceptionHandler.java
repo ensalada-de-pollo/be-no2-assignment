@@ -1,7 +1,6 @@
 package com.be_no2_assignment.lv3_6.common;
 
 import com.be_no2_assignment.lv3_6.common.exception.BadInputException;
-import com.be_no2_assignment.lv3_6.common.exception.FailedToSaveException;
 import com.be_no2_assignment.lv3_6.common.exception.DataNotFoundException;
 import com.be_no2_assignment.lv3_6.common.exception.PasswordMismatchException;
 import org.springframework.context.MessageSourceResolvable;
@@ -27,12 +26,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(PasswordMismatchException.class)
   public ResponseEntity<ErrorResult> handlePasswordMismatchException(PasswordMismatchException e) {
     return new ResponseEntity<>(new ErrorResult(HttpStatus.BAD_REQUEST, e.getMessage()), HttpStatus.BAD_REQUEST);
-  }
-
-  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ExceptionHandler(FailedToSaveException.class)
-  public ResponseEntity<ErrorResult> handleFailedToSaveException(FailedToSaveException e) {
-    return new ResponseEntity<>(new ErrorResult(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)

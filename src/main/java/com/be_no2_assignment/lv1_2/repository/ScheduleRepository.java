@@ -13,6 +13,6 @@ public interface ScheduleRepository {
   Optional<Schedule> findScheduleById(Long id);
 
   // lv2
-  Long updateSchedule(Long id, String passwd, String todo, Timestamp updatedDateTime);
+  Long updateSchedule(Long id, String todo, Timestamp updatedDateTime);
   void deleteSchedule(Long id);
 }

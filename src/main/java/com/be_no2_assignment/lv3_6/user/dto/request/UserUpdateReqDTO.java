@@ -1,7 +1,6 @@
 package com.be_no2_assignment.lv3_6.user.dto.request;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 
 // lv6
 public record UserUpdateReqDTO(

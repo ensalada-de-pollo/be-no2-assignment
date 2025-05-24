@@ -11,6 +11,6 @@ public record ScheduleResDTO(Long id, String todo, Timestamp createdDateTime, Ti
         schedule.getTodo(),
         schedule.getCreatedDateTime(),
         schedule.getUpdatedDateTime(),
-        schedule.getUserId());
+        schedule.getUser().getId());
   }
 }

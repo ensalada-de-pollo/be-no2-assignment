@@ -43,7 +43,7 @@ public class ScheduleController {
   }
 
   // lv2
-  @PutMapping("/{id}")
+  @PatchMapping("/{id}")
   public ResponseEntity<ScheduleResDTO> updateSchedule(@PathVariable Long id, HttpServletRequest request, @RequestBody ScheduleUpdateReqDTO scheduleUpdateReqDTO) {
     log.info("schedule id {} 에 대한 수정 요청입니다.", id);
 

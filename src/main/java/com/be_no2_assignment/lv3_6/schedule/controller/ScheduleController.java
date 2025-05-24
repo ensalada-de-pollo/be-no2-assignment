@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +45,7 @@ public class ScheduleController {
     return ResponseEntity.ok(scheduleService.createSchedule(scheduleCreateReqDTO));
   }
 
-  @PutMapping("/{id}")
+  @PatchMapping("/{id}")
   public ResponseEntity<ScheduleResDTO> updateSchedule(
       @PathVariable Long id,
       HttpServletRequest request,
@@ -54,9 +55,8 @@ public class ScheduleController {
 
     String passwd = request.getHeader("passwd");
     if (passwd == null) throw new BadInputException("비밀번호를 입력해주세요.");
-    userService.checkPassword(id, passwd);
 
-    return ResponseEntity.ok(scheduleService.updateSchedule(id, scheduleUpdateReqDTO));
+    return ResponseEntity.ok(scheduleService.updateSchedule(id, passwd, scheduleUpdateReqDTO));
   }
 
   @DeleteMapping("/{id}")
@@ -65,15 +65,14 @@ public class ScheduleController {
 
     String passwd = request.getHeader("passwd");
     if (passwd == null) throw new BadInputException("비밀번호를 입력해주세요.");
-    userService.checkPassword(id, passwd);
 
-    scheduleService.deleteSchedule(id);
+    scheduleService.deleteSchedule(id, passwd);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok("일정 삭제에 성공하였습니다.");
   }
 
   @GetMapping("/page")
-  public ResponseEntity<List<SchedulePageResDTO>> findSchedulePages(@Valid SchedulePageReqDTO schedulePageReqDTO) {
+  public ResponseEntity<Page<SchedulePageResDTO>> findSchedulePages(@Valid SchedulePageReqDTO schedulePageReqDTO) {
     log.info("Find schedule pages");
 
     return ResponseEntity.ok(scheduleService.findSchedulePages(schedulePageReqDTO));

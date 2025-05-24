@@ -1,33 +1,40 @@
 package com.be_no2_assignment.lv3_6.schedule.domain;
 
-import lombok.AllArgsConstructor;
+import com.be_no2_assignment.lv3_6.user.domain.User;
+import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Getter
-@AllArgsConstructor
+@Entity
+@NoArgsConstructor
 public class Schedule {
+
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String todo;
   private Timestamp createdDateTime;
   private Timestamp updatedDateTime;
-  private Long userId;
 
-  public Schedule(String todo, Timestamp createdDateTime, Long userId) {
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "userId", referencedColumnName = "id")
+  private User user;
+
+  public Schedule(String todo, Timestamp createdDateTime, User user) {
     this.todo = todo;
     this.createdDateTime = createdDateTime;
     this.updatedDateTime = this.createdDateTime;
-    this.userId = userId;
+    this.user = user;
   }
 
-  public Schedule(String todo, Long userId) {
+  public Schedule(String todo, User user) {
     this.todo = todo;
     this.createdDateTime = new Timestamp(System.currentTimeMillis());
     this.updatedDateTime = this.createdDateTime;
-    this.userId = userId;
+    this.user = user;
   }
 
   public void setTodo(String todo) {

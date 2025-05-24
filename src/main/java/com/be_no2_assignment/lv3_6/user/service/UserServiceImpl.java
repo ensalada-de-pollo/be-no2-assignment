@@ -1,7 +1,5 @@
 package com.be_no2_assignment.lv3_6.user.service;
 
-import com.be_no2_assignment.lv3_6.common.exception.BadInputException;
-import com.be_no2_assignment.lv3_6.common.exception.FailedToSaveException;
 import com.be_no2_assignment.lv3_6.common.exception.DataNotFoundException;
 import com.be_no2_assignment.lv3_6.common.exception.PasswordMismatchException;
 import com.be_no2_assignment.lv3_6.schedule.repository.ScheduleRepository;
@@ -35,18 +33,15 @@ public class UserServiceImpl implements UserService {
 //      throw new BadInputException("비밀번호를 입력해주세요."); // lv6에서 값의 존재 여부를 검증하고 있으므로 주석처리
 //    }
 
-    User user = new User(
-        userRegisterReqDTO.username(),
-        userRegisterReqDTO.passwd(),
-        userRegisterReqDTO.email(),
-        now,
-        now
+    return UserResDTO.toDTO(
+        userRepository.save(new User(
+              userRegisterReqDTO.username(),
+              userRegisterReqDTO.passwd(),
+              userRegisterReqDTO.email(),
+              now,
+              now)
+        )
     );
-
-    return userRepository.findUserById(userRepository.save(user))
-        .map(UserResDTO::toDTO)
-//        .orElseThrow(() -> new RuntimeException("사용자 생성에 실패하였습니다."));
-        .orElseThrow(() -> new FailedToSaveException("생성에 실패하였습니다."));
   }
 
   @Override
@@ -60,13 +55,21 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UserResDTO updateUser(Long id, UserUpdateReqDTO userUpdateReqDTO) {
-    return userRepository.findUserById(
-            userRepository.updateUser(id,
-                userUpdateReqDTO.username(),
-                userUpdateReqDTO.email(),
-                new Timestamp(System.currentTimeMillis())
-        ))
+  public UserResDTO updateUser(Long id, String passwd, UserUpdateReqDTO userUpdateReqDTO) {
+    checkPassword(id, passwd);
+
+    return userRepository.findById(id)
+        .map(user-> {
+          if (userUpdateReqDTO.username() != null)
+            user.setUsername(userUpdateReqDTO.username());
+
+          if (userUpdateReqDTO.email() != null)
+            user.setEmail(userUpdateReqDTO.email());
+
+          user.setUpdatedDateTime(new Timestamp(System.currentTimeMillis()));
+
+          return userRepository.save(user);
+        })
         .map(UserResDTO::toDTO)
 //        .orElseThrow(() -> new RuntimeException("수정된 사용자를 찾을 수 없습니다."));
         .orElseThrow(() -> new DataNotFoundException("수정된 사용자를 찾을 수 없습니다."));
@@ -74,9 +77,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void deleteUser(Long id) {
-    scheduleRepository.deleteScheduleByUserId(id); // 참조 무결성 원칙
-    userRepository.deleteUser(id);
+  public void deleteUser(Long id, String passwd) {
+    checkPassword(id, passwd);
+
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new DataNotFoundException("해당 사용자를 찾을 수 없습니다."));
+    scheduleRepository.deleteAllByUser(user); // 참조 무결성 원칙
+    userRepository.deleteById(id);
   }
 
   @Override

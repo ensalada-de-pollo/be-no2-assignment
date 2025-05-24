@@ -1,12 +1,19 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/assignment2?useUnicode=true&serverTimezone=Asia/Seoul # 과제 lv3-5
-    # url: jdbc:mysql://localhost:3306/assignment?useUnicode=true&serverTimezone=Asia/Seoul # 과제 lv0-2
+    url: jdbc:mysql://localhost:3306/assignment?useUnicode=true&serverTimezone=Asia/Seoul
     username: assignment
     password: "pwDk5P@SdXX@w@h"
     driver-class-name: com.mysql.cj.jdbc.Driver
   jackson:
     time-zone: Asia/Seoul # 한국 시간대로 설정
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        default_batch_fetch_size: 1000
+        format_sql: true
+
 
 debug:
   true

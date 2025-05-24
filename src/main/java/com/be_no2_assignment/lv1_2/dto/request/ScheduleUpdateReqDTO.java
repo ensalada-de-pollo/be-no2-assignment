@@ -5,6 +5,5 @@ import lombok.Getter;
 // lv2
 @Getter
 public class ScheduleUpdateReqDTO {
-  private String passwd;
   private String todo;
 }

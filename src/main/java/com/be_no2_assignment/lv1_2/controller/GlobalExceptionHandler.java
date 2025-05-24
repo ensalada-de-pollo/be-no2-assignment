@@ -11,10 +11,16 @@ import java.util.InputMismatchException;
 
 @RestControllerAdvice
 @Slf4j
-public class InputMismatchHandler {
+public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(InputMismatchException.class)
   public ResponseEntity<String> inputMismatchHandler(InputMismatchException e) {
     return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<String> runtimeExceptionHandler(RuntimeException e) {
+    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
   }
 }
